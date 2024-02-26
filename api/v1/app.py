@@ -12,7 +12,7 @@ app.register_blueprint(app_views)
 
 
 @app.teardown_appcontext
-def close_storage(self):
+def close_storage(exception):
     '''Remove the current SQLAlchemy session'''
     storage.close()
 
