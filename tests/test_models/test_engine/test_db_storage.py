@@ -67,6 +67,8 @@ test_db_storage.py'])
             self.assertTrue(len(func[1].__doc__) >= 1,
                             "{:s} method needs a docstring".format(func[0]))
 
+class NonExistentClass:
+    pass
 
 class TestFileStorage(unittest.TestCase):
     """Test the FileStorage class"""
@@ -86,3 +88,41 @@ class TestFileStorage(unittest.TestCase):
     @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
     def test_save(self):
         """Test that save properly saves objects to file.json"""
+
+    @unittest.skipIf(models.storage_t == 'file', "not testing db storage")
+    def test_get(self):
+        """Test the get method"""
+        storage = DBStorage()
+        obj = User()
+        obj.save()
+        retrieved_obj = storage.get(User, obj.id)
+        self.assertEqual(retrieved_obj, obj)
+
+    @unittest.skipIf(models.storage_t == 'file', "not testing db storage")
+    def test_get_nonexistent_object(self):
+        """Test get method with a non-existent object"""
+        storage = DBStorage()
+        retrieved_obj = storage.get(User, "nonexistent_id")
+        self.assertIsNone(retrieved_obj)
+
+    @unittest.skipIf(models.storage_t == 'file', "not testing db storage")
+    def test_count(self):
+        """Test the count method"""
+        storage = DBStorage()
+        count_before = storage.count()
+        obj1 = User()
+        obj1.save()
+        count_after_user = storage.count(User)
+        obj2 = Place()
+        obj2.save()
+        count_after_all = storage.count()
+        self.assertEqual(count_before, 0)
+        self.assertEqual(count_after_user, 1)
+        self.assertEqual(count_after_all, 2)
+
+    @unittest.skipIf(models.storage_t == 'file', "not testing db storage")
+    def test_count_nonexistent_class(self):
+        """Test count method with a non-existent class"""
+        storage = DBStorage()
+        count = storage.count(NonExistentClass)
+        self.assertEqual(count, 0)
