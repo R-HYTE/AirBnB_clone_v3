@@ -82,19 +82,30 @@ class TestBaseModel(unittest.TestCase):
         """Test that two BaseModel instances have different datetime objects
         and that upon creation have identical updated_at and created_at
         value."""
-        tic = datetime.now()
         inst1 = BaseModel()
-        toc = datetime.now()
-        self.assertTrue(tic <= inst1.created_at <= toc)
-        time.sleep(1e-4)
-        tic = datetime.now()
         inst2 = BaseModel()
-        toc = datetime.now()
-        self.assertTrue(tic <= inst2.created_at <= toc)
+
+        # Ensure created_at and updated_at are identical upon creation
         self.assertEqual(inst1.created_at, inst1.updated_at)
         self.assertEqual(inst2.created_at, inst2.updated_at)
+
+        # Ensure different instances have different datetime objects
         self.assertNotEqual(inst1.created_at, inst2.created_at)
         self.assertNotEqual(inst1.updated_at, inst2.updated_at)
+
+        # Ensure that created_at is between tic and toc
+        tic = datetime.now()
+        self.assertTrue(tic <= inst1.created_at <= datetime.now())
+
+        # Sleep briefly to ensure different timestamps for updated_at
+        time.sleep(1e-4)
+
+        # Update one of the instances to change updated_at
+        inst1.save()
+
+        # Ensure that updated_at is between tic and toc
+        tic = datetime.now()
+        self.assertTrue(tic <= inst1.updated_at <= datetime.now())
 
     def test_uuid(self):
         """Test that id is a valid uuid"""
