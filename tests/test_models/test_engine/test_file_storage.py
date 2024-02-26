@@ -67,6 +67,8 @@ test_file_storage.py'])
             self.assertTrue(len(func[1].__doc__) >= 1,
                             "{:s} method needs a docstring".format(func[0]))
 
+class NonExistentClass:
+    pass
 
 class TestFileStorage(unittest.TestCase):
     """Test the FileStorage class"""
@@ -113,3 +115,17 @@ class TestFileStorage(unittest.TestCase):
         with open("file.json", "r") as f:
             js = f.read()
         self.assertEqual(json.loads(string), json.loads(js))
+
+    @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
+    def test_get_nonexistent_object(self):
+        """Test get method with a non-existent object"""
+        storage = FileStorage()
+        retrieved_obj = storage.get(User, "nonexistent_id")
+        self.assertIsNone(retrieved_obj)
+
+    @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
+    def test_count_nonexistent_class(self):
+        """Test count method with a non-existent class"""
+        storage = FileStorage()
+        count = storage.count(NonExistentClass)
+        self.assertEqual(count, 0)
