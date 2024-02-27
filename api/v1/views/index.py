@@ -3,23 +3,35 @@
 
 from flask import jsonify
 from api.v1.views import app_views
+from models.amenity import Amenity
+from models.city import City
+from models.place import Place
+from models.review import Review
+from models.state import State
+from models.user import User
 from models import storage
 
+# Define the classes dictionary
+classes = {
+        "amenities": Amenity,
+        "cities": City,
+        "places": Place,
+        "reviews": Review,
+        "states": State,
+        "users": User,
+}
 
-@app_views.route('/status', methods=['GET'], strict_slashes=False)
+@app_views.route('/status')
 def status():
     """Return the API status"""
     return jsonify({'status': 'OK'})
 
-@app_views.route('/stats', methods=['GET'], strict_slashes=False)
-def get_stats():
+@app_views.route('/stats')
+def stats():
     """Retrieves the number of each object by type"""
-    stats = {
-        'amenities': storage.count('Amenity'),
-        'cities': storage.count('City'),
-        'places': storage.count('Place'),
-        'reviews': storage.count('Review'),
-        'states': storage.count('State'),
-        'users': storage.count('User')
-    }
+    stats = {}
+
+    for key, value in classes.items():
+        stats[key] = storage.count(value)
+
     return jsonify(stats)
