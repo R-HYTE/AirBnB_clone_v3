@@ -20,6 +20,11 @@ def close_storage(exception):
     storage.close()
 
 
+@app.errorhandler(404)
+def error_handler(error):
+    return jsonify({"error": "Not found"}), 404
+
+
 if __name__ == "__main__":
     host = getenv("HBNB_API_HOST", "0.0.0.0")
     port = int(getenv("HBNB_API_PORT", 5000))
