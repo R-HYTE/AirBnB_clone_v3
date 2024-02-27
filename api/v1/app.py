@@ -12,7 +12,6 @@ app.url_map.strict_slashes = False
 app.register_blueprint(app_views)
 
 
-
 @app.teardown_appcontext
 def close_storage(exception):
     """Remove the current SQLAlchemy session"""
@@ -23,4 +22,4 @@ if __name__ == "__main__":
     host = getenv("HBNB_API_HOST", "0.0.0.0")
     port = int(getenv("HBNB_API_PORT", 5000))
 
-    app.run(host=host, port=port, threaded=True, debug=True)
+    app.run(host, port, threaded=True, debug=True)
