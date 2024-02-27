@@ -29,7 +29,7 @@ def status():
     return response
 
 
-@app_views.route("/stats")
+@app_views.route('/stats')
 def stats():
     """Retrieves the number of each object by type"""
     stats = {}
