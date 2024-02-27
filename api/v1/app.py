@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-'''Main module for the AirBnB API v1.'''
+"""Main module for the AirBnB API v1."""
 
 from flask import Flask, jsonify
 from models import storage
@@ -14,7 +14,7 @@ app.url_map.strict_slashes = False
 
 @app.teardown_appcontext
 def close_storage(exception):
-    '''Remove the current SQLAlchemy session'''
+    """Remove the current SQLAlchemy session"""
     storage.close()
 
 
