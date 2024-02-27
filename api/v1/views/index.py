@@ -21,11 +21,13 @@ classes = {
         "users": User,
 }
 
-@app_views.route('/status', methods=['GET'], strict_slashes=False)
+
+@app_views.route("/status")
 def status():
     """Return the API status"""
-    response = jsonify({'status': 'OK'})
+    response = jsonify({"status": "OK"})
     return response
+
 
 @app_views.route('/stats')
 def stats():
